@@ -1,0 +1,28 @@
+{
+  "name": "生活化减脂增肌",
+  "short_name": "减脂增肌",
+  "description": "把生活化减脂增肌 Excel 表格变成可安装、可离线打开的饮食方案工具。",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#080A0B",
+  "theme_color": "#B8FF2C",
+  "categories": ["health", "fitness", "productivity"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
