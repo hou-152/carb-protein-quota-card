@@ -5,7 +5,7 @@
 
 ## 1. 技术栈一句话
 
-**碳水蛋白质配额卡用 Vite + React + TypeScript + 普通 CSS + GitHub Pages 搭建，作为纯前端 SSG / SPA 小工具。**
+**碳水蛋白质配额卡用 Vite + React + TypeScript + 普通 CSS 搭建，作为纯前端 SSG / SPA 小工具，部署到 GitHub Pages、CloudBase 和 Cloudflare Pages。**
 
 ## 2. 决策原因
 
@@ -102,10 +102,12 @@ interface QuotaResult {
 
 ## 6. 部署
 
-- **平台**：GitHub Pages。
+- **平台**：GitHub Pages、CloudBase、Cloudflare Pages。
 - **GitHub 仓库名**：默认建议 `hou-152/carb-protein-quota-card`，最终以用户创建的仓库为准。
 - **线上地址**：默认建议 `https://hou-152.github.io/carb-protein-quota-card/`，最终以 GitHub Pages 实际地址为准。
 - **CI/CD**：GitHub Actions + Pages。
+- **CloudBase**：`scripts/deploy.sh` 构建后上传 `dist/` 到腾讯云 CloudBase Hosting。
+- **Cloudflare Pages**：`scripts/deploy-cloudflare.sh` 构建后用 `wrangler pages deploy dist --project-name carb-protein-quota-card --branch main` 直传到 Pages。
 - **环境变量**：无。
 - **个人主页接入**：部署成功并获得真实 URL 后，把项目加入 `/Users/housibo/Documents/个人主页/src/data/projects.ts`，不得提前填写虚构 GitHub 或 demo 链接。
 

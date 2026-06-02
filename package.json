@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "verify:data": "node scripts/verify-data.mjs",
     "verify": "npm run typecheck && npm run verify:data && npm run build",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:cloudflare": "bash scripts/deploy-cloudflare.sh"
   },
   "dependencies": {
     "@types/react": "18.3.12",

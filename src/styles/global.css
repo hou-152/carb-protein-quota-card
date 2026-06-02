@@ -9,16 +9,16 @@
   --panel: #0b1110;
   --panel-2: #101716;
   --panel-3: #131c1a;
-  --line: rgba(190, 255, 68, 0.16);
-  --line-soft: rgba(232, 239, 226, 0.1);
+  --line: rgba(180, 223, 82, 0.2);
+  --line-soft: rgba(232, 239, 226, 0.12);
   --text: #e8efe2;
-  --muted: #879187;
-  --green: #b7ff28;
-  --green-2: #6ee15d;
-  --blue: #57a8ff;
-  --yellow: #ffbd39;
-  --red: #ff644f;
-  --shadow: 0 18px 52px rgba(0, 0, 0, 0.34);
+  --muted: #9aa69a;
+  --green: #a7d83c;
+  --green-2: #5fcb58;
+  --blue: #5f9fe0;
+  --yellow: #d6a13c;
+  --red: #e26858;
+  --shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
 }
 
 * {
@@ -27,10 +27,10 @@
 
 html {
   background:
-    linear-gradient(rgba(183, 255, 40, 0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(183, 255, 40, 0.026) 1px, transparent 1px),
+    linear-gradient(rgba(167, 216, 60, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 216, 60, 0.016) 1px, transparent 1px),
     var(--bg);
-  background-size: 28px 28px;
+  background-size: 32px 32px;
   scroll-behavior: smooth;
 }
 
@@ -52,10 +52,10 @@ button {
 button,
 select,
 input {
-  min-height: 38px;
+  min-height: 36px;
   border: 1px solid var(--line-soft);
-  border-radius: 6px;
-  background: #0b100f;
+  border-radius: 5px;
+  background: rgba(8, 13, 12, 0.9);
   color: var(--text);
 }
 
@@ -68,21 +68,29 @@ input {
 button:hover,
 select:hover,
 input:hover {
-  border-color: rgba(183, 255, 40, 0.36);
+  border-color: rgba(167, 216, 60, 0.4);
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(167, 216, 60, 0.7);
+  outline-offset: 2px;
 }
 
 .app-shell {
-  width: min(1380px, calc(100% - 28px));
+  width: min(1420px, calc(100% - 36px));
   margin: 0 auto;
-  padding: 18px 0 36px;
+  padding: 20px 0 40px;
 }
 
 .app-header {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 320px minmax(0, 1fr);
   gap: 18px;
   align-items: end;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   min-width: 0;
 }
 
@@ -95,7 +103,7 @@ input:hover {
 .eyebrow {
   margin: 0;
   color: var(--green);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 800;
 }
 
@@ -110,8 +118,8 @@ input:hover {
 .header-actions a,
 .doc-tabs button,
 .qa-toolbar button {
-  min-height: 30px;
-  padding: 7px 10px;
+  min-height: 32px;
+  padding: 7px 12px;
   border: 1px solid var(--line-soft);
   border-radius: 999px;
   color: var(--muted);
@@ -124,11 +132,12 @@ input:hover {
 .qa-toolbar button:first-child {
   border-color: var(--green);
   color: var(--green);
+  background: rgba(167, 216, 60, 0.08);
 }
 
 .workbench {
   display: grid;
-  grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+  grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
   gap: 18px;
   align-items: start;
 }
@@ -139,13 +148,19 @@ input:hover {
 .today-card,
 .plain-result {
   border: 1px solid var(--line-soft);
-  border-radius: 8px;
-  background: rgba(11, 17, 16, 0.92);
+  border-radius: 6px;
+  background: rgba(10, 16, 15, 0.94);
   box-shadow: var(--shadow);
 }
 
 .input-panel {
+  position: sticky;
+  top: 16px;
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
   padding: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(167, 216, 60, 0.36) transparent;
 }
 
 .section-heading {
@@ -170,7 +185,7 @@ input:hover {
   display: block;
   margin-bottom: 6px;
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 800;
 }
 
@@ -184,20 +199,20 @@ input:hover {
 
 .segmented-control > div {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
-  gap: 7px;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 6px;
 }
 
 .segment,
 .segmented-control button {
-  padding: 8px 10px;
+  padding: 7px 10px;
 }
 
 .segment.is-active,
 .segmented-control button.active,
 .copy-button {
   border-color: var(--green);
-  background: rgba(183, 255, 40, 0.14);
+  background: rgba(167, 216, 60, 0.14);
   color: var(--green);
   font-weight: 850;
 }
@@ -205,7 +220,7 @@ input:hover {
 .input-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
@@ -215,7 +230,7 @@ input:hover {
 
 .dashboard {
   display: grid;
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
 }
 
@@ -224,7 +239,7 @@ input:hover {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 14px;
   padding: 18px;
-  border-top: 3px solid var(--green) !important;
+  border-top: 2px solid var(--green) !important;
 }
 
 .plan-hero h2,
@@ -251,11 +266,14 @@ input:hover {
 .plan-actions button {
   width: 38px;
   padding: 0;
+  color: var(--muted);
 }
 
 .today-card {
   padding: 18px;
-  background: radial-gradient(circle at top left, rgba(183, 255, 40, 0.14), rgba(11, 17, 16, 0.92) 46%);
+  background:
+    linear-gradient(135deg, rgba(167, 216, 60, 0.1), rgba(10, 16, 15, 0) 42%),
+    rgba(10, 16, 15, 0.94);
 }
 
 .today-card h3 {
@@ -269,7 +287,7 @@ input:hover {
 .doc-grid,
 .dual-grid {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .quick-grid {
@@ -286,12 +304,12 @@ input:hover {
 .swap-table,
 .qa-item {
   border: 1px solid var(--line-soft);
-  border-radius: 7px;
+  border-radius: 6px;
   background: var(--panel-2);
 }
 
 .quick-grid article {
-  padding: 12px;
+  padding: 11px;
 }
 
 .quick-grid strong,
@@ -312,7 +330,7 @@ input:hover {
 }
 
 .card-section {
-  padding: 14px;
+  padding: 16px;
 }
 
 .section-title {
@@ -320,7 +338,7 @@ input:hover {
   justify-content: space-between;
   gap: 10px;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .section-title h2 {
@@ -330,7 +348,7 @@ input:hover {
 .section-title h2::before {
   content: "";
   display: inline-block;
-  width: 6px;
+  width: 5px;
   height: 16px;
   margin-right: 8px;
   border-radius: 999px;
@@ -355,20 +373,20 @@ input:hover {
 }
 
 .cycle-main {
-  border-color: rgba(183, 255, 40, 0.35);
+  border-color: rgba(167, 216, 60, 0.36);
 }
 
 .cycle-main strong {
   display: block;
   margin: 6px 0;
   color: var(--green);
-  font-size: 1.45rem;
+  font-size: 1.35rem;
 }
 
 .metric-tile strong {
   display: block;
   margin-top: 6px;
-  font-size: 1.8rem;
+  font-size: 1.65rem;
   line-height: 1;
 }
 
@@ -387,7 +405,7 @@ input:hover {
 }
 
 .bar-row i {
-  height: 8px;
+  height: 7px;
   overflow: hidden;
   border-radius: 999px;
   background: #18201e;
@@ -423,7 +441,7 @@ input:hover {
 }
 
 .doc-tabs button.active {
-  background: rgba(183, 255, 40, 0.14);
+  background: rgba(167, 216, 60, 0.14);
   font-weight: 850;
 }
 
@@ -436,13 +454,13 @@ input:hover {
 .guide-point,
 .changelog-group {
   border: 1px solid var(--line-soft);
-  border-radius: 7px;
+  border-radius: 6px;
   background: var(--panel-2);
 }
 
 .guide-lead {
   padding: 14px;
-  border-color: rgba(183, 255, 40, 0.28);
+  border-color: rgba(167, 216, 60, 0.3);
 }
 
 .guide-lead h3,
@@ -501,8 +519,8 @@ input:hover {
 
 .changelog-items article {
   padding: 10px;
-  border-radius: 7px;
-  background: rgba(183, 255, 40, 0.055);
+  border-radius: 6px;
+  background: rgba(167, 216, 60, 0.055);
 }
 
 .changelog-items p {
@@ -519,7 +537,7 @@ input:hover {
 
 .doc-grid article:first-child {
   grid-row: span 2;
-  border-color: rgba(183, 255, 40, 0.28);
+  border-color: rgba(167, 216, 60, 0.3);
 }
 
 .dual-grid {
@@ -595,9 +613,9 @@ input:hover {
 
 .tips-list li {
   padding: 10px 12px;
-  border: 1px solid rgba(183, 255, 40, 0.22);
-  border-radius: 7px;
-  background: rgba(183, 255, 40, 0.055);
+  border: 1px solid rgba(167, 216, 60, 0.24);
+  border-radius: 6px;
+  background: rgba(167, 216, 60, 0.055);
   color: #cdd9cc;
   font-size: 0.86rem;
 }
@@ -616,7 +634,7 @@ input:hover {
 
 .qa-tabs button.active {
   border-color: var(--green);
-  background: rgba(183, 255, 40, 0.14);
+  background: rgba(167, 216, 60, 0.14);
   color: var(--green);
   font-weight: 850;
 }
@@ -681,6 +699,8 @@ input:hover {
 
   .input-panel {
     position: static;
+    max-height: none;
+    overflow: visible;
   }
 
   .header-actions {
@@ -695,6 +715,10 @@ input:hover {
     padding-top: 10px;
   }
 
+  .app-header h1 {
+    font-size: 1.6rem;
+  }
+
   .header-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -706,12 +730,22 @@ input:hover {
 
   .plan-hero,
   .input-row,
-  .segmented-control > div,
   .guide-points,
   .qa-toolbar,
   .swap-selects,
   .meal-totals {
     grid-template-columns: 1fr;
+  }
+
+  .segmented-control > div {
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  }
+
+  .card-section,
+  .today-card,
+  .plan-hero,
+  .input-panel {
+    padding: 14px;
   }
 
   .bar-row {
