@@ -11,10 +11,10 @@ Status: completed
 
 ## Phase 02 - Deployment Plumbing
 
-Status: in_progress
+Status: completed
 
 - Add Cloudflare Pages deploy script and npm command.
 - Update architecture documentation for GitHub Pages, CloudBase, and Cloudflare Pages.
 - Run full validation and production build.
 - Commit and push to GitHub.
-- Deploy to Cloudflare Pages after Wrangler authentication is available.
+- Deploy to Cloudflare Pages after Wrangler authentication is available. Completed with project `housibo-carb-card`.

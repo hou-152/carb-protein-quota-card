@@ -14,7 +14,7 @@ v3.6 已恢复冷黑工具基线，但界面仍偏荧光和游戏化，输入栏
 - 提高表单、按钮、卡片和图表的层级一致性。
 - 桌面端让输入面板保持 sticky，减少从上到下填表时的上下跳动。
 - 移动端明确折叠多列布局，确认无横向溢出。
-- 新增 Cloudflare Pages 部署脚本，并继续通过 GitHub Pages 发布。
+- 新增 Cloudflare Pages 部署脚本，并继续通过 GitHub Pages 发布。Cloudflare 项目名为 `housibo-carb-card`。
 
 ## 范围
 

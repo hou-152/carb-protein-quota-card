@@ -107,7 +107,7 @@ interface QuotaResult {
 - **线上地址**：默认建议 `https://hou-152.github.io/carb-protein-quota-card/`，最终以 GitHub Pages 实际地址为准。
 - **CI/CD**：GitHub Actions + Pages。
 - **CloudBase**：`scripts/deploy.sh` 构建后上传 `dist/` 到腾讯云 CloudBase Hosting。
-- **Cloudflare Pages**：`scripts/deploy-cloudflare.sh` 构建后用 `wrangler pages deploy dist --project-name carb-protein-quota-card --branch main` 直传到 Pages。
+- **Cloudflare Pages**：`scripts/deploy-cloudflare.sh` 构建后用 `wrangler pages deploy dist --project-name housibo-carb-card --branch main` 直传到 Pages。
 - **环境变量**：无。
 - **个人主页接入**：部署成功并获得真实 URL 后，把项目加入 `/Users/housibo/Documents/个人主页/src/data/projects.ts`，不得提前填写虚构 GitHub 或 demo 链接。
 

@@ -5,8 +5,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-CACHE_DIR="${npm_config_cache:-/tmp/codex-npm-cache-card}"
-PROJECT_NAME="${CLOUDFLARE_PAGES_PROJECT:-carb-protein-quota-card}"
+CACHE_DIR="${CLOUDFLARE_WRANGLER_NPM_CACHE:-/tmp/codex-npm-cache-card}"
+PROJECT_NAME="${CLOUDFLARE_PAGES_PROJECT:-housibo-carb-card}"
 BRANCH_NAME="${CLOUDFLARE_PAGES_BRANCH:-main}"
 WRANGLER="npx --cache \"$CACHE_DIR\" --yes wrangler@latest"
 
@@ -28,5 +28,5 @@ echo "▶ 4/4 部署到 Cloudflare Pages: $PROJECT_NAME / $BRANCH_NAME ..."
 eval "$WRANGLER pages deploy dist --project-name \"$PROJECT_NAME\" --branch \"$BRANCH_NAME\""
 
 echo ""
-echo "✅ 部署完成。Cloudflare Pages 地址通常是："
+echo "✅ 部署完成。Cloudflare Pages 地址："
 echo "   https://$PROJECT_NAME.pages.dev"
