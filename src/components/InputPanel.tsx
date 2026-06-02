@@ -1,3 +1,4 @@
+import type { FocusEvent } from "react";
 import { Gender, Goal, TrainingStatus } from "../data/quotaTable";
 import {
   aerobicActivities,
@@ -37,6 +38,12 @@ export function InputPanel({ value, onChange }: InputPanelProps) {
       trainingStatus,
       goal: trainingStatus === "no-strength" ? "fat-loss" : value.goal,
     });
+  }
+
+  function selectZero(event: FocusEvent<HTMLInputElement>) {
+    if (event.currentTarget.value === "0") {
+      event.currentTarget.select();
+    }
   }
 
   return (
@@ -88,6 +95,7 @@ export function InputPanel({ value, onChange }: InputPanelProps) {
             max={90}
             type="number"
             value={value.age}
+            onFocus={selectZero}
             onChange={(event) => update({ age: Number(event.target.value) })}
           />
         </label>
@@ -101,6 +109,7 @@ export function InputPanel({ value, onChange }: InputPanelProps) {
             step={0.1}
             type="number"
             value={value.height}
+            onFocus={selectZero}
             onChange={(event) => update({ height: Number(event.target.value) })}
           />
         </label>
@@ -114,6 +123,7 @@ export function InputPanel({ value, onChange }: InputPanelProps) {
             step={0.1}
             type="number"
             value={value.weight}
+            onFocus={selectZero}
             onChange={(event) => update({ weight: Number(event.target.value) })}
           />
         </label>
@@ -127,6 +137,7 @@ export function InputPanel({ value, onChange }: InputPanelProps) {
             step={0.1}
             type="number"
             value={value.targetBmi}
+            onFocus={selectZero}
             onChange={(event) => update({ targetBmi: Number(event.target.value) })}
           />
         </label>
@@ -153,6 +164,7 @@ export function InputPanel({ value, onChange }: InputPanelProps) {
               max={7}
               type="number"
               value={value.strengthDays}
+              onFocus={selectZero}
               onChange={(event) => update({ strengthDays: Number(event.target.value) })}
             />
           </label>
@@ -199,6 +211,7 @@ export function InputPanel({ value, onChange }: InputPanelProps) {
             step={0.5}
             type="number"
             value={value.aerobicWeeklyUnits}
+            onFocus={selectZero}
             onChange={(event) =>
               update({ aerobicWeeklyUnits: Number(event.target.value) })
             }

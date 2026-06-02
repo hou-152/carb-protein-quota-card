@@ -74,6 +74,12 @@ export interface QuotaResult {
     carb?: number;
     protein: number;
   };
+  aerobicCarb: number;
+  basal?: {
+    trainingCarb?: number;
+    restCarb?: number;
+    carb?: number;
+  };
 }
 
 export function calculateQuota(input: QuotaInput): QuotaResult {
@@ -83,6 +89,7 @@ export function calculateQuota(input: QuotaInput): QuotaResult {
   const bmi = calculateBmi(input);
   const energy = calculateEnergy(input);
   const aerobicFoodSwap = calculateAerobicFoodSwap(energy.dailyAerobic);
+  const aerobicCarb = aerobicFoodSwap.carbEquivalent;
   const mealSteps =
     input.trainingStatus === "strength"
       ? strengthMealTemplates[input.trainingTiming]
@@ -96,6 +103,7 @@ export function calculateQuota(input: QuotaInput): QuotaResult {
       bmi,
       energy,
       aerobicFoodSwap,
+      aerobicCarb,
       mealSteps,
       message: "原表暂时没有“无力量训练 + 增肌”的配额，建议切换训练状态或目标。",
     };
@@ -111,12 +119,16 @@ export function calculateQuota(input: QuotaInput): QuotaResult {
       bmi,
       energy,
       aerobicFoodSwap,
+      aerobicCarb,
       mealSteps,
       message: "这个身高体重组合不在当前截图表格范围内，先不要猜数值。",
     };
   }
 
   if (cell.kind === "strength") {
+    const basalTrainingCarb = Math.round(cell.trainingCarb * input.weight);
+    const basalRestCarb = Math.round(cell.restCarb * input.weight);
+
     return {
       status: "available",
       matchedHeight,
@@ -124,14 +136,21 @@ export function calculateQuota(input: QuotaInput): QuotaResult {
       bmi,
       energy,
       aerobicFoodSwap,
+      aerobicCarb,
       mealSteps,
+      basal: {
+        trainingCarb: basalTrainingCarb,
+        restCarb: basalRestCarb,
+      },
       values: {
-        trainingCarb: Math.round(cell.trainingCarb * input.weight),
-        restCarb: Math.round(cell.restCarb * input.weight),
+        trainingCarb: basalTrainingCarb + aerobicCarb,
+        restCarb: basalRestCarb + aerobicCarb,
         protein: Math.round(cell.protein * input.weight),
       },
     };
   }
+
+  const basalCarb = Math.round(cell.carb * input.weight);
 
   return {
     status: "available",
@@ -140,9 +159,13 @@ export function calculateQuota(input: QuotaInput): QuotaResult {
     bmi,
     energy,
     aerobicFoodSwap,
+    aerobicCarb,
     mealSteps,
+    basal: {
+      carb: basalCarb,
+    },
     values: {
-      carb: Math.round(cell.carb * input.weight),
+      carb: basalCarb + aerobicCarb,
       protein: Math.round(cell.protein * input.weight),
     },
   };
@@ -248,8 +271,8 @@ export function formatResultText(input: QuotaInput, result: QuotaResult) {
       ? `训练日碳水 ${result.values.trainingCarb}g，休息日碳水 ${result.values.restCarb}g`
       : `每日碳水 ${result.values.carb}g`;
   const aerobicText =
-    result.energy.dailyAerobic > 0
-      ? `；有氧平均每天约 ${result.energy.dailyAerobic} 大卡，若全部换成碳水食物约 +${result.aerobicFoodSwap.carbEquivalent}g 碳水`
+    result.aerobicCarb > 0
+      ? `；有氧平均每天约 ${result.energy.dailyAerobic} 大卡，已按约 +${result.aerobicCarb}g 碳水并入总量`
       : "";
 
   return `我用「碳水蛋白质配额卡」查到：${gender} / ${trainingStatus} / ${goal}，BMI ${result.bmi.value}（${result.bmi.category}），按 ${result.matchedHeight}cm / ${result.matchedWeight}kg 档位，${carbText}，每日蛋白质 ${result.values.protein}g${aerobicText}。仅作生活化饮食参考，不是医疗建议。`;
