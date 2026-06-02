@@ -6,9 +6,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   --bg: #050807;
-  --panel: #0b1110;
-  --panel-2: #101716;
-  --panel-3: #131c1a;
+  --panel: #0a1110;
+  --panel-2: #111918;
+  --panel-3: #17211f;
   --line: rgba(180, 223, 82, 0.2);
   --line-soft: rgba(232, 239, 226, 0.12);
   --text: #e8efe2;
@@ -19,6 +19,7 @@
   --yellow: #d6a13c;
   --red: #e26858;
   --shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  --inner-line: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 * {
@@ -27,6 +28,8 @@
 
 html {
   background:
+    radial-gradient(circle at 18% 0%, rgba(167, 216, 60, 0.13), transparent 28rem),
+    radial-gradient(circle at 88% 12%, rgba(95, 159, 224, 0.08), transparent 30rem),
     linear-gradient(rgba(167, 216, 60, 0.018) 1px, transparent 1px),
     linear-gradient(90deg, rgba(167, 216, 60, 0.016) 1px, transparent 1px),
     var(--bg);
@@ -87,17 +90,36 @@ a:focus-visible {
 
 .app-header {
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
+  grid-template-columns: minmax(300px, 0.9fr) minmax(520px, 1.1fr);
   gap: 18px;
-  align-items: end;
-  margin-bottom: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(167, 216, 60, 0.08), transparent 34%),
+    rgba(6, 10, 9, 0.78);
+  box-shadow: var(--shadow), var(--inner-line);
+}
+
+.brand-block {
   min-width: 0;
 }
 
 .app-header h1 {
   margin: 4px 0 0;
-  font-size: 1.75rem;
+  font-size: clamp(1.85rem, 2.4vw, 2.55rem);
   line-height: 1.1;
+}
+
+.brand-block p:last-child {
+  max-width: 34rem;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
 .eyebrow {
@@ -108,10 +130,9 @@ a:focus-visible {
 }
 
 .header-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
-  justify-content: flex-end;
   min-width: 0;
 }
 
@@ -121,10 +142,17 @@ a:focus-visible {
   min-height: 32px;
   padding: 7px 12px;
   border: 1px solid var(--line-soft);
-  border-radius: 999px;
+  border-radius: 6px;
   color: var(--muted);
+  background: rgba(10, 16, 15, 0.7);
   text-decoration: none;
   font-size: 0.8rem;
+}
+
+.header-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .header-actions a:hover,
@@ -137,7 +165,7 @@ a:focus-visible {
 
 .workbench {
   display: grid;
-  grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+  grid-template-columns: minmax(310px, 360px) minmax(0, 1fr);
   gap: 18px;
   align-items: start;
 }
@@ -148,9 +176,9 @@ a:focus-visible {
 .today-card,
 .plain-result {
   border: 1px solid var(--line-soft);
-  border-radius: 6px;
+  border-radius: 10px;
   background: rgba(10, 16, 15, 0.94);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), var(--inner-line);
 }
 
 .input-panel {
@@ -158,13 +186,18 @@ a:focus-visible {
   top: 16px;
   max-height: calc(100dvh - 32px);
   overflow: auto;
-  padding: 14px;
+  padding: 16px;
+  background:
+    linear-gradient(180deg, rgba(167, 216, 60, 0.06), transparent 16rem),
+    rgba(8, 14, 13, 0.96);
   scrollbar-width: thin;
   scrollbar-color: rgba(167, 216, 60, 0.36) transparent;
 }
 
 .section-heading {
-  margin-bottom: 14px;
+  margin: -4px -4px 16px;
+  padding: 4px 4px 14px;
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .section-heading h2 {
@@ -184,15 +217,15 @@ a:focus-visible {
 .swap-selects span {
   display: block;
   margin-bottom: 6px;
-  color: var(--muted);
+  color: #aeb8ad;
   font-size: 0.76rem;
   font-weight: 800;
 }
 
 .segmented-control {
   display: grid;
-  gap: 7px;
-  margin: 0 0 12px;
+  gap: 8px;
+  margin: 0 0 14px;
   padding: 0;
   border: 0;
 }
@@ -200,19 +233,22 @@ a:focus-visible {
 .segmented-control > div {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
-  gap: 6px;
+  gap: 7px;
 }
 
 .segment,
 .segmented-control button {
-  padding: 7px 10px;
+  padding: 8px 10px;
+  color: #dbe4d9;
+  background: rgba(4, 8, 7, 0.7);
 }
 
 .segment.is-active,
 .segmented-control button.active,
 .copy-button {
   border-color: var(--green);
-  background: rgba(167, 216, 60, 0.14);
+  background:
+    linear-gradient(180deg, rgba(167, 216, 60, 0.22), rgba(167, 216, 60, 0.1));
   color: var(--green);
   font-weight: 850;
 }
@@ -236,10 +272,14 @@ a:focus-visible {
 
 .plan-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  padding: 18px;
-  border-top: 2px solid var(--green) !important;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 18px;
+  padding: 20px;
+  border-top: 0 !important;
+  background:
+    linear-gradient(90deg, rgba(167, 216, 60, 0.14), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+    rgba(9, 15, 14, 0.96);
 }
 
 .plan-hero h2,
@@ -247,6 +287,10 @@ a:focus-visible {
 .section-title h2 {
   margin: 4px 0 0;
   letter-spacing: 0;
+}
+
+.plan-hero h2 {
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
 }
 
 .plan-hero p,
@@ -259,25 +303,63 @@ a:focus-visible {
 }
 
 .plan-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.plan-stat-stack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
-.plan-actions button {
+.plan-stat-stack span {
+  display: grid;
+  align-content: center;
+  min-height: 84px;
+  padding: 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: rgba(17, 25, 24, 0.82);
+}
+
+.plan-stat-stack b {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.plan-stat-stack strong {
+  margin-top: 6px;
+  color: var(--text);
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.plan-buttons button {
   width: 38px;
   padding: 0;
   color: var(--muted);
 }
 
 .today-card {
-  padding: 18px;
+  padding: 22px;
   background:
-    linear-gradient(135deg, rgba(167, 216, 60, 0.1), rgba(10, 16, 15, 0) 42%),
-    rgba(10, 16, 15, 0.94);
+    radial-gradient(circle at top left, rgba(167, 216, 60, 0.18), transparent 30rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent),
+    rgba(10, 16, 15, 0.96);
 }
 
 .today-card h3 {
-  font-size: clamp(1.45rem, 4vw, 1.9rem);
+  max-width: 18ch;
+  font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.22;
   overflow-wrap: anywhere;
 }
@@ -304,12 +386,21 @@ a:focus-visible {
 .swap-table,
 .qa-item {
   border: 1px solid var(--line-soft);
-  border-radius: 6px;
-  background: var(--panel-2);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent),
+    var(--panel-2);
 }
 
 .quick-grid article {
-  padding: 11px;
+  padding: 14px;
+}
+
+.quick-grid article:first-child {
+  border-color: rgba(167, 216, 60, 0.34);
+  background:
+    linear-gradient(135deg, rgba(167, 216, 60, 0.12), transparent 58%),
+    var(--panel-2);
 }
 
 .quick-grid strong,
@@ -330,7 +421,7 @@ a:focus-visible {
 }
 
 .card-section {
-  padding: 16px;
+  padding: 18px;
 }
 
 .section-title {
@@ -364,12 +455,12 @@ a:focus-visible {
 }
 
 .cycle-grid {
-  grid-template-columns: minmax(240px, 1.2fr) repeat(4, minmax(120px, 1fr));
+  grid-template-columns: minmax(260px, 1.25fr) repeat(4, minmax(118px, 1fr));
 }
 
 .cycle-main,
 .metric-tile {
-  padding: 14px;
+  padding: 16px;
 }
 
 .cycle-main {
@@ -388,6 +479,7 @@ a:focus-visible {
   margin-top: 6px;
   font-size: 1.65rem;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .energy-bars {
@@ -430,10 +522,10 @@ a:focus-visible {
 }
 
 .doc-tabs {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
   gap: 7px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .doc-tabs button {
@@ -454,7 +546,7 @@ a:focus-visible {
 .guide-point,
 .changelog-group {
   border: 1px solid var(--line-soft);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--panel-2);
 }
 
@@ -690,6 +782,7 @@ a:focus-visible {
 @media (max-width: 980px) {
   .app-header,
   .workbench,
+  .plan-hero,
   .dual-grid,
   .cycle-grid,
   .doc-grid,
@@ -704,7 +797,7 @@ a:focus-visible {
   }
 
   .header-actions {
-    justify-content: flex-start;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -735,6 +828,19 @@ a:focus-visible {
   .swap-selects,
   .meal-totals {
     grid-template-columns: 1fr;
+  }
+
+  .plan-actions,
+  .plan-stat-stack {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plan-buttons button {
+    width: 100%;
   }
 
   .segmented-control > div {

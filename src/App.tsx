@@ -95,9 +95,10 @@ export default function App() {
   return (
     <main className="app-shell">
       <header className="app-header" aria-labelledby="page-title">
-        <div>
+        <div className="brand-block">
           <p className="eyebrow">生活化减脂增肌</p>
           <h1 id="page-title">饮食方案计算器</h1>
+          <p>按身高体重、训练状态和目标，把今天要执行的碳水、蛋白和热量拆成可落地方案。</p>
         </div>
         <div className="header-actions">
           <a href="#cycle">周期判断</a>

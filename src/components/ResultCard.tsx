@@ -73,7 +73,7 @@ export function ResultCard({ input, result }: ResultCardProps) {
   return (
     <section className="dashboard" aria-live="polite">
       <section className="plan-hero">
-        <div>
+        <div className="plan-copy">
           <p className="eyebrow">当前方案</p>
           <h2>{getTimingLabel(input)} · {input.goal === "fat-loss" ? "减脂" : "增肌"}</h2>
           <p>
@@ -83,8 +83,24 @@ export function ResultCard({ input, result }: ResultCardProps) {
           </p>
         </div>
         <div className="plan-actions">
-          <button type="button" onClick={copyResult}>⧉</button>
-          <button type="button" onClick={() => window.print()}>⎙</button>
+          <div className="plan-stat-stack" aria-label="当前方案关键读数">
+            <span>
+              <b>BMI</b>
+              <strong>{result.bmi.value}</strong>
+            </span>
+            <span>
+              <b>目标热量</b>
+              <strong>{formatNumber(result.energy.targetTraining ?? result.energy.targetDaily ?? 0)}</strong>
+            </span>
+            <span>
+              <b>蛋白</b>
+              <strong>{result.values?.protein ?? 0}g</strong>
+            </span>
+          </div>
+          <div className="plan-buttons">
+            <button type="button" aria-label="复制方案" onClick={copyResult}>⧉</button>
+            <button type="button" aria-label="打印方案" onClick={() => window.print()}>⎙</button>
+          </div>
         </div>
       </section>
 
