@@ -25,8 +25,15 @@ Verification:
 
 ## Phase 03 - Ship
 
-Status: in_progress
+Status: completed
 
 - Commit and push to GitHub.
 - Verify GitHub Pages.
 - Deploy and verify Cloudflare Pages.
+
+Verification:
+
+- Pushed commit `8a8b40b` to `origin/main`.
+- Verified GitHub Pages serves `index-C7oH8v31.js` and `index-gDzBoxuT.css`.
+- Deployed Cloudflare Pages project `housibo-carb-card`.
+- Verified both `https://housibo-carb-card.pages.dev` and the deployment URL serve the same assets.
