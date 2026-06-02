@@ -104,6 +104,21 @@ export function ResultCard({ input, result }: ResultCardProps) {
         </div>
       </section>
 
+      <section className="mobile-summary-card" id="summary">
+        <p className="eyebrow">今天先执行</p>
+        <h2>{getPrimaryMacroText(result)}</h2>
+        <p>
+          蛋白 {result.values?.protein ?? 0}g，目标热量约{" "}
+          {formatNumber(result.energy.targetTraining ?? result.energy.targetDaily ?? 0)} kcal。
+        </p>
+        <div className="mobile-summary-metrics">
+          <span><b>BMI</b><strong>{result.bmi.value}</strong></span>
+          <span><b>目标</b><strong>{input.goal === "fat-loss" ? "减脂" : "增肌"}</strong></span>
+          <span><b>力训</b><strong>{input.trainingStatus === "strength" ? `${input.strengthDays}天` : "无"}</strong></span>
+        </div>
+        <a className="mobile-adjust-link" href="#input-title">调整参数</a>
+      </section>
+
       {result.status === "available" && result.values ? (
         <section className="today-card">
           <p className="eyebrow">今天先执行</p>
@@ -167,6 +182,18 @@ export function ResultCard({ input, result }: ResultCardProps) {
 
       <section className="card-section" id="docs">
         <SectionTitle title="产品文档" aside={activeGuide.subtitle} />
+        <label className="doc-select-label">
+          <span>选择主题</span>
+          <select
+            className="doc-select"
+            value={activeGuideTab}
+            onChange={(event) => setActiveGuideTab(event.target.value as GuideTabId)}
+          >
+            {guideOrder.map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
+          </select>
+        </label>
         <div className="doc-tabs" role="tablist" aria-label="方案说明">
           {guideOrder.map(([id, label]) => (
             <button

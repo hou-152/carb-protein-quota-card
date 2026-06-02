@@ -113,6 +113,13 @@ export default function App() {
         <InputPanel value={input} onChange={setInput} />
         <ResultCard input={input} result={result} />
       </div>
+
+      <nav className="mobile-bottom-nav" aria-label="手机主导航">
+        <a href="#summary">方案</a>
+        <a href="#input-title">调整</a>
+        <a href="#docs">文档</a>
+        <a href="#qa">问答</a>
+      </nav>
     </main>
   );
 }
