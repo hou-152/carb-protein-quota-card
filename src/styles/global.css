@@ -118,7 +118,7 @@ input:hover {
 }
 
 .header-actions a:hover,
-.doc-tabs button:first-child,
+.doc-tabs button.active,
 .qa-toolbar button:first-child {
   border-color: var(--green);
   color: var(--green);
@@ -126,7 +126,7 @@ input:hover {
 
 .workbench {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
   gap: 18px;
   align-items: start;
 }
@@ -143,8 +143,6 @@ input:hover {
 }
 
 .input-panel {
-  position: sticky;
-  top: 14px;
   padding: 14px;
 }
 
@@ -193,7 +191,7 @@ input:hover {
 
 .input-row {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 12px;
 }
@@ -395,6 +393,97 @@ input:hover {
   flex-wrap: wrap;
   gap: 7px;
   margin-bottom: 10px;
+}
+
+.doc-tabs button {
+  white-space: nowrap;
+}
+
+.doc-tabs button.active {
+  background: rgba(183, 255, 40, 0.14);
+  font-weight: 850;
+}
+
+.guide-content {
+  display: grid;
+  gap: 10px;
+}
+
+.guide-lead,
+.guide-point,
+.changelog-group {
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
+  background: var(--panel-2);
+}
+
+.guide-lead {
+  padding: 14px;
+  border-color: rgba(183, 255, 40, 0.28);
+}
+
+.guide-lead h3,
+.guide-point b,
+.changelog-items b {
+  color: var(--text);
+}
+
+.guide-lead p,
+.guide-point span,
+.changelog-items p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.guide-points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.guide-point {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.changelog-tree {
+  display: grid;
+  gap: 10px;
+}
+
+.changelog-group summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.changelog-group summary strong {
+  color: var(--text);
+}
+
+.changelog-group summary span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.changelog-items {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.changelog-items article {
+  padding: 10px;
+  border-radius: 7px;
+  background: rgba(183, 255, 40, 0.055);
+}
+
+.changelog-items p {
+  margin: 5px 0 0;
 }
 
 .doc-grid {

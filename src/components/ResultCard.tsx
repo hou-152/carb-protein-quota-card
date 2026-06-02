@@ -30,12 +30,15 @@ export function ResultCard({ input, result }: ResultCardProps) {
   const [copyState, setCopyState] = useState<"idle" | "success" | "error">("idle");
   const [carbFoodId, setCarbFoodId] = useState("rice");
   const [proteinFoodId, setProteinFoodId] = useState("lean-cooked");
+  const [activeGuideTab, setActiveGuideTab] = useState<GuideTabId>("readme");
   const resultText = formatResultText(input, result);
   const aerobicActivity = getAerobicActivity(input.aerobicActivityId);
   const carbFood = carbFoods.find((food) => food.id === carbFoodId) ?? carbFoods[0];
   const proteinFood =
     proteinFoods.find((food) => food.id === proteinFoodId) ?? proteinFoods[0];
   const mealPlan = useMemo(() => createMealPlan(input, result), [input, result]);
+  const guideTabs = useMemo(() => createGuideTabs(input, result), [input, result]);
+  const activeGuide = guideTabs[activeGuideTab] ?? guideTabs.readme;
 
   async function copyResult() {
     try {
@@ -120,24 +123,22 @@ export function ResultCard({ input, result }: ResultCardProps) {
       </section>
 
       <section className="card-section" id="docs">
-        <SectionTitle title="产品文档" aside="README" />
-        <div className="doc-tabs">
-          {["README", "周期判断", "热量逻辑", "碳蛋脂", "食物代换", "平台期", "力训保肌", "有氧补充", "Changelog"].map((tab) => (
-            <button key={tab} type="button">{tab}</button>
+        <SectionTitle title="产品文档" aside={activeGuide.subtitle} />
+        <div className="doc-tabs" role="tablist" aria-label="方案说明">
+          {guideOrder.map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              className={activeGuideTab === id ? "active" : ""}
+              aria-selected={activeGuideTab === id}
+              role="tab"
+              onClick={() => setActiveGuideTab(id)}
+            >
+              {label}
+            </button>
           ))}
         </div>
-        <div className="doc-grid">
-          <article>
-            <h3>先读懂设计逻辑，再开始照表执行</h3>
-            <p>
-              这个工具不是固定食谱，而是把 Excel 套表里的饮食系统变成网页：先判断周期，再估算热量，再查表分配碳水和蛋白，脂肪用生活化规则控制。
-            </p>
-          </article>
-          <article><h3>适用人群</h3><p>想做生活化减脂或干净增肌的人。无力训可以减脂；增肌默认需要稳定力量训练。</p></article>
-          <article><h3>使用顺序</h3><p>先填身体和目标，再确认力训、有氧和训练时段，最后看今日执行、餐次配额和食物代换。</p></article>
-          <article><h3>内容出处</h3><p>{sourceCopy}</p></article>
-          <article><h3>边界提醒</h3><p>{disclaimerCopy}</p></article>
-        </div>
+        <GuideContent tab={activeGuide} />
       </section>
 
       {result.status === "available" && result.values && (
@@ -254,6 +255,250 @@ function MetricTile({ label, value, sub }: { label: string; value: string; sub: 
       <small>{sub}</small>
     </div>
   );
+}
+
+type GuideTabId =
+  | "readme"
+  | "cycle"
+  | "diet"
+  | "macro"
+  | "swap"
+  | "trend"
+  | "strength"
+  | "cardio"
+  | "changelog";
+
+interface GuideTab {
+  subtitle: string;
+  leadTitle: string;
+  leadText: string;
+  points?: Array<[string, string]>;
+  groups?: Array<{
+    title: string;
+    count: number;
+    note: string;
+    open?: boolean;
+    items: Array<[string, string]>;
+  }>;
+}
+
+const guideOrder: Array<[GuideTabId, string]> = [
+  ["readme", "README"],
+  ["cycle", "周期判断"],
+  ["diet", "热量逻辑"],
+  ["macro", "碳蛋脂"],
+  ["swap", "食物代换"],
+  ["trend", "平台期"],
+  ["strength", "力训保肌"],
+  ["cardio", "有氧补充"],
+  ["changelog", "Changelog"],
+];
+
+function GuideContent({ tab }: { tab: GuideTab }) {
+  return (
+    <div className="guide-content">
+      <article className="guide-lead">
+        <h3>{tab.leadTitle}</h3>
+        <p>{tab.leadText}</p>
+      </article>
+      {tab.groups ? (
+        <div className="changelog-tree">
+          {tab.groups.map((group) => (
+            <details className="changelog-group" key={group.title} open={group.open}>
+              <summary>
+                <strong>{group.title}</strong>
+                <span>{group.count} 条 · {group.note}</span>
+              </summary>
+              <div className="changelog-items">
+                {group.items.map(([title, text]) => (
+                  <article key={title}>
+                    <b>{title}</b>
+                    <p>{text}</p>
+                  </article>
+                ))}
+              </div>
+            </details>
+          ))}
+        </div>
+      ) : (
+        <div className="guide-points">
+          {(tab.points ?? []).map(([title, text]) => (
+            <article className="guide-point" key={title}>
+              <b>{title}</b>
+              <span>{text}</span>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function createGuideTabs(input: QuotaInput, result: QuotaResult): Record<GuideTabId, GuideTab> {
+  const isFatLoss = input.goal === "fat-loss";
+  const noStrength = input.trainingStatus === "no-strength";
+  const targetEat = result.energy.targetTraining ?? result.energy.targetDaily ?? 0;
+  const goalLabel = isFatLoss ? "减脂" : "增肌";
+  const strengthLabel = noStrength ? "无力量训练" : "有力量训练";
+  const carbAdd = result.aerobicFoodSwap.carbEquivalent;
+
+  return {
+    readme: {
+      subtitle: "README",
+      leadTitle: "先读懂设计逻辑，再开始照表执行",
+      leadText:
+        "这个工具不是固定食谱，而是把 Excel 套表里的饮食系统变成网页：先判断周期，再估算热量，再查表分配碳水和蛋白，脂肪用生活化规则控制。",
+      points: [
+        ["适用人群", "想做生活化减脂或干净增肌的人。无力训可以减脂；增肌默认需要稳定力量训练。"],
+        ["使用顺序", "先填身体和目标，再确认力训、有氧和训练时段，最后看今日执行、餐次配额和食物代换。"],
+        ["内容出处", sourceCopy],
+        ["边界提醒", disclaimerCopy],
+      ],
+    },
+    cycle: {
+      subtitle: "周期判断",
+      leadTitle: "什么时候转增肌，什么时候转减脂",
+      leadText: `当前 BMI ${result.bmi.value}（${result.bmi.category}），目标 BMI ${input.targetBmi}。BMI 只是入口，腰围、健康状态和心理压力也要一起看。`,
+      points: [
+        ["当前建议", getCycleAdvice(input, result)],
+        ["减脂转增肌", "男性 BMI 22-23、女性 BMI 20-21，通常建议停止减脂并转入维持或增肌。"],
+        ["增肌转减脂", "介意发胖时可以更早转减脂；不介意发胖也不建议长期增到过高 BMI。"],
+      ],
+    },
+    diet: {
+      subtitle: "热量逻辑",
+      leadTitle: isFatLoss ? "减脂先看热量缺口，不先看练没练" : "增肌先看热量盈余，但要保守",
+      leadText: isFatLoss
+        ? `体脂下降来自长期热量缺口。当前理论缺口约 ${formatNumber(getDailyGap(result))} kcal/天，当前应吃约 ${formatNumber(targetEat)} kcal/天。`
+        : `干净增肌用小盈余，不追求快速涨体重。当前应吃约 ${formatNumber(targetEat)} kcal/天，重点看 1 个月趋势。`,
+      points: [
+        ["饮食是主旋钮", "工具先算无运动总消耗，再叠加力训和有氧；有氧消耗会折算成碳水参考。"],
+        ["体重看周期", isFatLoss ? "减脂看 7-14 天趋势，不被两三天水盐和食物残留带着走。" : "增肌看 1 个月趋势，体重涨太快通常不是好事。"],
+      ],
+    },
+    macro: {
+      subtitle: "碳蛋脂",
+      leadTitle: "碳水看饱腹，蛋白看瘦肉，脂肪看边界",
+      leadText: `${getFatGuide(input.weight)}g 脂肪指导。碳水和蛋白按表执行；如果填写有氧，当前有氧可折算为约 +${formatNumber(carbAdd)}g 碳水参考。`,
+      points: [
+        ["碳水", "吃不下配额时，可用面条、面包、馒头等低饱腹主食；容易饿时，优先米饭、玉米、红薯、土豆、燕麦。"],
+        ["蛋白", "瘦肉基本是无明显脂肪层的猪牛羊肉、去皮鸡鸭肉、鱼虾；高脂肉不能当瘦肉。"],
+        ["脂肪", "正常带油炒菜每个菜大约吃油 5-10g。高脂肉、糖油混合物最容易让脂肪超标。"],
+      ],
+    },
+    swap: {
+      subtitle: "食物代换",
+      leadTitle: "代换不是只换练后餐，而是每一餐都要能落地",
+      leadText: "食物代换按餐次输出：力训日看练前餐、练后餐和正常餐；休息日看早餐、午饭、晚饭、零食/夜宵。",
+      points: [
+        ["碳水怎么换", "用本餐碳水克数除以食物碳水率，得到熟米饭、面、红薯等大约重量。"],
+        ["蛋白怎么换", "用本餐蛋白克数除以食物蛋白率，得到瘦肉、鱼虾、蛋白粉等大约重量。"],
+      ],
+    },
+    trend: {
+      subtitle: "平台期",
+      leadTitle: isFatLoss ? "平台期先别慌，短期体重不等于脂肪" : "增肌更不能天天用体重判断肌肉",
+      leadText: isFatLoss
+        ? "减脂期每天真实脂肪变化通常只有几十克，很容易被食物残留、排便、盐分、水分滞留盖过去。"
+        : "肌肉增长比脂肪下降更慢，日体重几乎不可能反映真实肌肉增长。增肌期至少按月观察。",
+      points: [
+        ["先排查执行", "有没有偷吃、低估外食、把高脂肉当瘦肉、忽略炒菜油调料零食、称量错误。"],
+        ["再调热量", "确认执行没问题后，每天少吃约 150 kcal，或每周多做约 1000 kcal 有氧但不加饮食。"],
+      ],
+    },
+    strength: {
+      subtitle: "力训保肌",
+      leadTitle: "力训和减脂没有直接关系，但和保肌很有关系",
+      leadText: "减脂需要的热量缺口可以由饮食提供；力训不是减脂的必要条件。它的价值是给肌肉一个“还需要你”的信号。",
+      points: [
+        ["无力训也能减脂", "如果当前不会练，先用无力量训练减脂表把饮食跑起来是可以的。"],
+        ["当前设置", `${goalLabel} · ${strengthLabel}。${noStrength ? "无力训模式只输出每日碳水、蛋白和脂肪指导。" : "有力训时分别输出训练日和休息日，训练日多出的碳水主要服务训练前后。"}`],
+      ],
+    },
+    cardio: {
+      subtitle: "有氧补充",
+      leadTitle: "要不要做有氧，取决于它解决什么问题",
+      leadText: `当前有氧折算为 ${formatNumber(result.energy.dailyAerobic)} kcal/天，可按约 +${formatNumber(carbAdd)}g 碳水理解。`,
+      points: [
+        ["减脂怎么判断", getCardioAdvice(input)],
+        ["碳水怎么加", "有氧热量优先理解为碳水，不加到脂肪，避免缺口被拉得过大。"],
+        ["时长上限", "如果要做有氧，建议每周低于 4h。力训前不要做有氧；力训后如果做，一般不超过 30 分钟。"],
+      ],
+    },
+    changelog: {
+      subtitle: "V3.5",
+      leadTitle: "V3.5 动态说明恢复版",
+      leadText: "V3.5 恢复 React 迁移时丢失的动态产品文档和 Changelog，并修复输入区填写流摩擦。",
+      groups: [
+        {
+          title: "V3.x",
+          count: 6,
+          note: "React 迁移、真实 Q&A、有氧并入和动态文档恢复",
+          open: true,
+          items: [
+            ["V3.5 · 2026-06-01", "恢复动态产品文档、恢复 Changelog，并修正桌面输入区滚动摩擦。"],
+            ["V3.4 · 2026-06-01", "接入真实 Excel Q&A，支持减脂 / 增肌切换、搜索和展开。"],
+            ["V3.3 · 2026-06-01", "有氧热量按碳水自动并入总碳水，并保留基础查表值说明。"],
+            ["V3.2 · 2026-06-01", "React 版复原原工具的数据关系：有氧、分餐、BMI、查表、问答。"],
+            ["V3.1 · 2026-06-01", "React / Vite 重写并部署到 GitHub Pages，作为可维护版本接入个人主页。"],
+            ["V3.0 · 2026-05-14", "新增 PWA 安装能力：manifest、service worker、应用图标、Apple 主屏幕 meta 和离线静态资源缓存。"],
+          ],
+        },
+        {
+          title: "V2.x",
+          count: 4,
+          note: "有氧碳水、文档 UI、视觉换肤与手机版导览",
+          open: true,
+          items: [
+            ["V2.3 · 2026-05-13", "手机版新增 3 步轻导览：身体目标、训练有氧、当前方案。"],
+            ["V2.2 · 2026-05-13", "冷黑器械感 UI 换肤，并统一 KPI、表格、Q&A、食物代换和 Changelog 的暗色视觉。"],
+            ["V2.1 · 2026-05-09", "Changelog 改为可折叠版本树；修复身高、体重、目标 BMI 输入小数点时被实时刷新吞掉的问题。"],
+            ["V2.0 · 2026-05-09", "有氧升级为大版本：有氧日均消耗按 4 kcal/g 折算为额外碳水。"],
+          ],
+        },
+        {
+          title: "V1.x",
+          count: 5,
+          note: "产品文档、导航与问答命名",
+          open: true,
+          items: [
+            ["V1.4 · 2026-05-09", "将 QA 问答库统一命名为 Q&A 问答库。"],
+            ["V1.3 · 规划", "原计划修复 BMI 小数输入；该修复已合并到 V2.1 实现。"],
+            ["V1.2 · 2026-05-09", "精简左侧功能栏：移除体重秤和厨房秤，把 7 天均值改为周期判断，把常吃主食改为碳蛋脂。"],
+            ["V1.1 · 2026-05-08", "左侧胶囊导航改为锚点跳转，并会同步切换产品文档 tab 到对应主题。"],
+            ["V1.0 · 2026-05-08", "新增周期判断、碳蛋脂吃法、夜宵设计原理、早餐蛋白模板、Q&A 问答库和来源标注。"],
+          ],
+        },
+        {
+          title: "V0.x",
+          count: 3,
+          note: "从 Excel 到可用网页",
+          open: true,
+          items: [
+            ["V0.3 · 2026-05-08", "可选食物代换改为全餐次输出；新增 README 和 Changelog tab。"],
+            ["V0.2 · 2026-05-07", "重做 UI，新增今天先执行卡片，把平台期、脂肪、力训和有氧解释放进产品结构。"],
+            ["V0.1 · 2026-05-02", "把自用 Excel 的减脂 / 增肌查表逻辑搬到网页，支持目标、性别、身高、体重和训练状态输入。"],
+          ],
+        },
+      ],
+    },
+  };
+}
+
+function getCardioAdvice(input: QuotaInput) {
+  if (input.goal === "muscle-gain") {
+    return "增肌期有氧不是用来制造消耗的主工具；可以保留少量低强度有氧维持心肺和食欲，但别影响力量训练恢复。";
+  }
+  if (input.trainingStatus === "no-strength") {
+    return "不会力训也可以先只做饮食方案。有氧可作为补充，但能稳定执行饮食更重要。";
+  }
+  if (input.weight > 80) {
+    return "当前体重大于 80kg，通常先不需要有氧；若要做，优先选游泳、单车、椭圆仪这类更友好的方式。";
+  }
+  if (input.weight >= 70) {
+    return "当前体重在 70-80kg，通常先不做有氧；如果按方案吃明显饿，再加少量有氧换取更多可吃碳水。";
+  }
+  return "当前体重低于 70kg，基础消耗较低，可默认每周约 2 小时有氧，让饮食热量和碳水稍微宽裕一点。";
 }
 
 function EnergyBars({ result }: { result: QuotaResult }) {
